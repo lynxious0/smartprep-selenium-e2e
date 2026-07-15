@@ -7,15 +7,49 @@
   Selenium Manager, so it auto-downloads the matching driver binary — you
   just need the browsers themselves installed.
 - `e2e/selenium/helpers.js` — shared flows: reset app state (clears
-  `localStorage`), register + auto-login a fresh test account, sign out.
+  `localStorage`), register + auto-login a fresh test account, sign out,
+  and `seedAppData` — writes a business profile / menu items / sales
+  records straight into the same `localStorage` keys `AppContext` reads
+  (`smartprep_<uid>_business` / `_menu` / `_sales`), so pages that need
+  existing data don't have to be driven there field-by-field through the
+  UI just to set up a test.
 - `e2e/selenium/login.test.js` (4 tests) — invalid login rejected,
   successful registration lands on `/business`, duplicate email rejected,
   logout + re-login reaches `/dashboard`.
 - `e2e/selenium/menu.test.js` (4 tests) — empty state, adding an item
   through the real form and seeing it appear, the required-name field
   blocking submission, deleting an item after confirming.
-- `e2e/selenium/run-all-browsers.js` — runs the suite once per browser and
-  prints a combined pass/fail summary.
+- `e2e/selenium/dashboard.test.js` (4 tests) — greets the user by name,
+  shows the setup prompt before a profile/menu exist, shows live stats
+  and today's recommendations once they do, prompts to record sales
+  when there's no sales history yet.
+- `e2e/selenium/business.test.js` (4 tests) — creation form on a new
+  account, saving a profile through the real form, the required-name
+  field blocking submission, editing a seeded profile via Edit Profile.
+- `e2e/selenium/sales.test.js` (4 tests) — empty state with no menu
+  items, saving a sales entry and seeing the confirmation, the
+  at-least-one-item validation error, a seeded record showing up under
+  the History tab.
+- `e2e/selenium/analytics.test.js` (4 tests) — empty chart states with
+  zeroed totals, correct summary totals once records exist, Today's
+  Summary appearing for a same-day record, totals recalculating when
+  filtering to one menu item via the dropdown.
+- `e2e/selenium/recommendations.test.js` (4 tests) — empty state with no
+  menu items, a recommendation card with a baseline-confidence badge per
+  item, the Attention-LSTM + XGBoost engine explainer, manually
+  overriding the day's weather.
+- `e2e/selenium/settings-about.test.js` (4 tests) — toggling dark mode,
+  changing font size, settings persisting across a reload, the About
+  page's hero/tech-stack/team sections.
+- `e2e/selenium/run-all-browsers.js` — runs all eight spec files once per
+  browser and prints a combined pass/fail summary.
+
+Between them, the suite now touches every route in `App.jsx` (`/login`,
+`/register`, `/dashboard`, `/business`, `/menu`, `/sales`, `/analytics`,
+`/recommendations`, `/settings`, `/about`). The FastAPI backend
+(`backend/main.py`) and the ML models' prediction *accuracy* are still out
+of scope — this suite drives the frontend against `predictLocalFallback`
+and asserts on UI behavior, not on model correctness.
 
 ## One-time setup
 
@@ -52,3 +86,9 @@
    ```
    npm run test:e2e:all
    ```
+
+Note: the app calls `/api/...` for live weather and prediction data and
+falls back to fixed local defaults when that call fails. The suite doesn't
+require the FastAPI backend to be running — assertions are written against
+the fallback behavior so they pass either way — but if you do run the
+backend alongside `npm run dev`, the same tests still hold.

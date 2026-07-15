@@ -2,9 +2,9 @@ Add these to your smartprep/package.json.
 
 Inside "scripts", add:
 
-    "test:e2e:chrome": "cross-env BROWSER=chrome node --test e2e/selenium/login.test.js e2e/selenium/menu.test.js",
-    "test:e2e:firefox": "cross-env BROWSER=firefox node --test e2e/selenium/login.test.js e2e/selenium/menu.test.js",
-    "test:e2e:edge": "cross-env BROWSER=edge node --test e2e/selenium/login.test.js e2e/selenium/menu.test.js",
+    "test:e2e:chrome": "cross-env BROWSER=chrome node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
+    "test:e2e:firefox": "cross-env BROWSER=firefox node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
+    "test:e2e:edge": "cross-env BROWSER=edge node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
     "test:e2e:all": "node e2e/selenium/run-all-browsers.js"
 
 Inside "devDependencies", add:

@@ -3,11 +3,22 @@ import { spawnSync } from 'node:child_process'
 const browsersArg = process.argv[2] || process.env.BROWSERS || 'chrome,firefox,edge'
 const browsers = browsersArg.split(',').map(b => b.trim()).filter(Boolean)
 
+const specFiles = [
+  'e2e/selenium/login.test.js',
+  'e2e/selenium/menu.test.js',
+  'e2e/selenium/dashboard.test.js',
+  'e2e/selenium/business.test.js',
+  'e2e/selenium/sales.test.js',
+  'e2e/selenium/analytics.test.js',
+  'e2e/selenium/recommendations.test.js',
+  'e2e/selenium/settings-about.test.js',
+]
+
 const results = []
 
 for (const browser of browsers) {
   console.log(`\n=== Running Selenium suite in ${browser} ===\n`)
-  const res = spawnSync('node', ['--test', 'e2e/selenium/login.test.js', 'e2e/selenium/menu.test.js'], {
+  const res = spawnSync('node', ['--test', ...specFiles], {
     stdio: 'inherit',
     env: { ...process.env, BROWSER: browser },
   })
