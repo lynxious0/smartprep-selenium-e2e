@@ -23,7 +23,8 @@ describe(`Dashboard [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('greets the logged-in user by first name', async () => {
+  test('greets the logged-in user by first name', async (t) => {
+    t.diagnostic('Remark: Confirms the dashboard header greets the logged-in user with their first name.')
     await registerAndLogin(driver, { name: 'Jasmine Reyes' })
     await driver.get(`${BASE_URL}/dashboard`)
 
@@ -34,7 +35,8 @@ describe(`Dashboard [${browserName}]`, () => {
     assert.ok(await heading.isDisplayed(), 'expected the dashboard greeting to include the user\'s first name')
   })
 
-  test('shows a setup prompt linking to the business profile when nothing is configured yet', async () => {
+  test('shows a setup prompt linking to the business profile when nothing is configured yet', async (t) => {
+    t.diagnostic('Remark: Confirms a user with no business profile sees a setup banner that links to /business.')
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/dashboard`)
 
@@ -48,7 +50,8 @@ describe(`Dashboard [${browserName}]`, () => {
     assert.ok((await setupLink.getAttribute('href')).includes('/business'))
   })
 
-  test('shows live stats and today\'s recommendations once a business profile and menu exist', async () => {
+  test('shows live stats and today\'s recommendations once a business profile and menu exist', async (t) => {
+    t.diagnostic("Remark: Confirms the dashboard reflects seeded menu-item counts and surfaces a Today's Recommendations section once setup is complete.")
     await registerAndLogin(driver)
     await seedAppData(driver, {
       business: sampleBusiness(),
@@ -69,7 +72,8 @@ describe(`Dashboard [${browserName}]`, () => {
     assert.ok(recRow.length > 0, 'expected the seeded menu item to appear in the recommendations list')
   })
 
-  test('prompts to record sales when no sales history exists yet', async () => {
+  test('prompts to record sales when no sales history exists yet', async (t) => {
+    t.diagnostic('Remark: Confirms a configured account with no sales yet is prompted to record sales via a link to /sales.')
     await registerAndLogin(driver)
     await seedAppData(driver, { business: sampleBusiness(), menuItems: [sampleMenuItem()] })
     await driver.get(`${BASE_URL}/dashboard`)

@@ -23,7 +23,8 @@ describe(`Sales Recording [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('shows the empty state when there are no menu items yet', async () => {
+  test('shows the empty state when there are no menu items yet', async (t) => {
+    t.diagnostic("Remark: Confirms the Sales page shows the 'No menu items yet' empty state when the menu is empty.")
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/sales`)
 
@@ -34,7 +35,8 @@ describe(`Sales Recording [${browserName}]`, () => {
     assert.ok(await empty.isDisplayed())
   })
 
-  test('saves a sales entry for a menu item and shows the confirmation', async () => {
+  test('saves a sales entry for a menu item and shows the confirmation', async (t) => {
+    t.diagnostic('Remark: Confirms entering prepared/sold quantities and saving records the entry and shows a same-day save confirmation.')
     await registerAndLogin(driver)
     await seedAppData(driver, { menuItems: [sampleMenuItem({ name: 'Lumpia' })] })
     await driver.get(`${BASE_URL}/sales`)
@@ -57,7 +59,8 @@ describe(`Sales Recording [${browserName}]`, () => {
     assert.ok(await flash.isDisplayed())
   })
 
-  test('shows an error if the entry is saved without any quantities filled in', async () => {
+  test('shows an error if the entry is saved without any quantities filled in', async (t) => {
+    t.diagnostic("Remark: Confirms saving with no quantities filled in is blocked with an 'Enter sales for at least one item.' error.")
     await registerAndLogin(driver)
     await seedAppData(driver, { menuItems: [sampleMenuItem({ name: 'Lumpia' })] })
     await driver.get(`${BASE_URL}/sales`)
@@ -72,7 +75,8 @@ describe(`Sales Recording [${browserName}]`, () => {
     assert.ok(await error.isDisplayed())
   })
 
-  test('shows a previously recorded sale under the History tab', async () => {
+  test('shows a previously recorded sale under the History tab', async (t) => {
+    t.diagnostic('Remark: Confirms a seeded sales record shows up correctly (prepared/sold quantities) under the History tab.')
     await registerAndLogin(driver)
     await seedAppData(driver, {
       menuItems: [sampleMenuItem({ name: 'Lumpia' })],

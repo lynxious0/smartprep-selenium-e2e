@@ -21,7 +21,8 @@ describe(`Auth flows [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('rejects a login attempt with credentials that do not exist', async () => {
+  test('rejects a login attempt with credentials that do not exist', async (t) => {
+    t.diagnostic("Remark: Confirms an unknown email/password pair shows the 'Invalid email or password.' error and keeps the user on /login instead of authenticating them.")
     await driver.get(`${BASE_URL}/login`)
     await driver.wait(until.elementLocated(By.css('input[type="email"]')), 10000)
 
@@ -37,12 +38,14 @@ describe(`Auth flows [${browserName}]`, () => {
     assert.ok((await driver.getCurrentUrl()).includes('/login'), 'should stay on the login page')
   })
 
-  test('registers a new account and lands on the business setup page', async () => {
+  test('registers a new account and lands on the business setup page', async (t) => {
+    t.diagnostic('Remark: Confirms a brand-new account can complete registration and is redirected straight into the /business setup flow.')
     await registerAndLogin(driver)
     assert.ok((await driver.getCurrentUrl()).includes('/business'))
   })
 
-  test('rejects registering an email that is already taken', async () => {
+  test('rejects registering an email that is already taken', async (t) => {
+    t.diagnostic("Remark: Confirms the registration form blocks a duplicate email with 'Email already registered.' so accounts stay unique.")
     const { email } = await registerAndLogin(driver)
     await logout(driver)
 
@@ -61,7 +64,8 @@ describe(`Auth flows [${browserName}]`, () => {
     assert.ok(await errorBox.isDisplayed())
   })
 
-  test('logs back in with a freshly created account and reaches the dashboard', async () => {
+  test('logs back in with a freshly created account and reaches the dashboard', async (t) => {
+    t.diagnostic('Remark: Confirms logout followed by a fresh login round-trips correctly and lands the user on /dashboard.')
     const email = uniqueEmail()
     await registerAndLogin(driver, { email })
     await logout(driver)

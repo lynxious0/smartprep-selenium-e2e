@@ -21,7 +21,8 @@ describe(`Business Profile [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('shows the profile creation form for a brand-new account', async () => {
+  test('shows the profile creation form for a brand-new account', async (t) => {
+    t.diagnostic('Remark: Confirms a brand-new account is presented with the business profile creation form and a Save Profile button.')
     await registerAndLogin(driver) // registration itself lands on /business
     await driver.wait(until.elementLocated(By.css('input[placeholder="e.g. Aling Nena\'s Carinderia"]')), 10000)
 
@@ -31,7 +32,8 @@ describe(`Business Profile [${browserName}]`, () => {
     assert.ok(await saveButton.isDisplayed())
   })
 
-  test('saves a new business profile through the form and shows the confirmation', async () => {
+  test('saves a new business profile through the form and shows the confirmation', async (t) => {
+    t.diagnostic("Remark: Confirms filling out and submitting the profile form persists the data and shows a 'Business profile saved!' confirmation.")
     await registerAndLogin(driver)
     await driver.wait(until.elementLocated(By.css('input[placeholder="e.g. Aling Nena\'s Carinderia"]')), 10000)
 
@@ -52,7 +54,8 @@ describe(`Business Profile [${browserName}]`, () => {
     assert.ok(await heading.isDisplayed())
   })
 
-  test('requires a business name before the profile can be saved', async () => {
+  test('requires a business name before the profile can be saved', async (t) => {
+    t.diagnostic('Remark: Confirms the required-name validation blocks saving a business profile with an empty name.')
     await registerAndLogin(driver)
     await driver.wait(until.elementLocated(By.css('input[placeholder="e.g. Aling Nena\'s Carinderia"]')), 10000)
 
@@ -66,7 +69,8 @@ describe(`Business Profile [${browserName}]`, () => {
     assert.equal(savedHeading.length, 0, 'should not have shown the saved confirmation')
   })
 
-  test('shows an existing profile read-only, and lets it be edited via Edit Profile', async () => {
+  test('shows an existing profile read-only, and lets it be edited via Edit Profile', async (t) => {
+    t.diagnostic('Remark: Confirms a seeded profile renders read-only first, and Edit Profile reopens the form pre-filled with the existing values.')
     await registerAndLogin(driver)
     await seedAppData(driver, { business: sampleBusiness({ name: 'Seeded Turo-Turo' }) })
     await driver.get(`${BASE_URL}/business`)

@@ -21,7 +21,8 @@ describe(`Settings & About [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('toggles dark mode from the Settings page', async () => {
+  test('toggles dark mode from the Settings page', async (t) => {
+    t.diagnostic("Remark: Confirms the dark mode toggle updates the label and applies the 'dark' class to the document.")
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/settings`)
 
@@ -45,7 +46,8 @@ describe(`Settings & About [${browserName}]`, () => {
     assert.equal(hasDarkClass, true)
   })
 
-  test('changes font size from the Settings page', async () => {
+  test('changes font size from the Settings page', async (t) => {
+    t.diagnostic('Remark: Confirms selecting the Large font size updates the label and sets the root font-size to 17px.')
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/settings`)
 
@@ -62,7 +64,8 @@ describe(`Settings & About [${browserName}]`, () => {
     assert.equal(fontSize, '17px')
   })
 
-  test('settings persist across a page reload', async () => {
+  test('settings persist across a page reload', async (t) => {
+    t.diagnostic('Remark: Confirms dark mode stays enabled after a full page reload, proving settings are actually persisted.')
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/settings`)
 
@@ -79,7 +82,8 @@ describe(`Settings & About [${browserName}]`, () => {
     assert.ok(await stillDark.isDisplayed())
   })
 
-  test('shows the About page hero, tech stack, and team sections', async () => {
+  test('shows the About page hero, tech stack, and team sections', async (t) => {
+    t.diagnostic('Remark: Confirms the About page renders its hero heading, tech-stack callout, and Development Team section.')
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/about`)
 

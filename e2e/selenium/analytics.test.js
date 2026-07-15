@@ -24,7 +24,8 @@ describe(`Analytics [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('shows empty chart states and zeroed totals when there is no sales data yet', async () => {
+  test('shows empty chart states and zeroed totals when there is no sales data yet', async (t) => {
+    t.diagnostic("Remark: Confirms Analytics shows empty-state charts and a zeroed Total Sold figure when there's no sales history.")
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/analytics`)
 
@@ -38,7 +39,8 @@ describe(`Analytics [${browserName}]`, () => {
     assert.equal(await totalSold.getText(), '0')
   })
 
-  test('shows correct summary totals once sales records exist', async () => {
+  test('shows correct summary totals once sales records exist', async (t) => {
+    t.diagnostic('Remark: Confirms Total Sold, Total Unsold, and Waste Rate are computed correctly from seeded sales records.')
     await registerAndLogin(driver)
     await seedAppData(driver, {
       menuItems: [sampleMenuItem({ name: 'Sinigang', id: 'sinigang' })],
@@ -61,7 +63,8 @@ describe(`Analytics [${browserName}]`, () => {
     assert.equal(await wasteRate.getText(), '25.0%') // 5 / 20 preparedQty, toFixed(1)
   })
 
-  test("shows Today's Summary when a sales record exists for today's date", async () => {
+  test("shows Today's Summary when a sales record exists for today's date", async (t) => {
+    t.diagnostic("Remark: Confirms a same-day sales record triggers the Today's Summary section with the matching item listed.")
     await registerAndLogin(driver)
     await seedAppData(driver, {
       menuItems: [sampleMenuItem({ name: 'Sinigang', id: 'sinigang' })],
@@ -79,7 +82,8 @@ describe(`Analytics [${browserName}]`, () => {
     assert.ok(await itemRow.isDisplayed())
   })
 
-  test('recalculates totals when filtering to a single menu item via the dropdown', async () => {
+  test('recalculates totals when filtering to a single menu item via the dropdown', async (t) => {
+    t.diagnostic('Remark: Confirms switching the item filter dropdown recalculates Total Sold to reflect only the selected item.')
     await registerAndLogin(driver)
     await seedAppData(driver, {
       menuItems: [

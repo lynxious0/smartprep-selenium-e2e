@@ -2,9 +2,9 @@ Add these to your smartprep/package.json.
 
 Inside "scripts", add:
 
-    "test:e2e:chrome": "cross-env BROWSER=chrome node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
-    "test:e2e:firefox": "cross-env BROWSER=firefox node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
-    "test:e2e:edge": "cross-env BROWSER=edge node --test --test-concurrency=1 e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
+    "test:e2e:chrome": "cross-env BROWSER=chrome node --test --test-concurrency=1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./e2e/selenium/reporters/file-logger.reporter.js --test-reporter-destination=e2e/selenium/logs/latest-chrome.log e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
+    "test:e2e:firefox": "cross-env BROWSER=firefox node --test --test-concurrency=1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./e2e/selenium/reporters/file-logger.reporter.js --test-reporter-destination=e2e/selenium/logs/latest-firefox.log e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
+    "test:e2e:edge": "cross-env BROWSER=edge node --test --test-concurrency=1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./e2e/selenium/reporters/file-logger.reporter.js --test-reporter-destination=e2e/selenium/logs/latest-edge.log e2e/selenium/login.test.js e2e/selenium/menu.test.js e2e/selenium/dashboard.test.js e2e/selenium/business.test.js e2e/selenium/sales.test.js e2e/selenium/analytics.test.js e2e/selenium/recommendations.test.js e2e/selenium/settings-about.test.js",
     "test:e2e:all": "node e2e/selenium/run-all-browsers.js"
 
 Inside "devDependencies", add:
@@ -15,3 +15,18 @@ Inside "devDependencies", add:
 Then run:
 
     npm install
+
+Notes on logging (new):
+- Every run now writes a plain-text log via e2e/selenium/reporters/file-logger.reporter.js.
+- e2e/selenium/logs/latest-<browser>.log — full detail of the most
+  recent run for that browser: timestamp, PASS/FAIL/SKIP per test,
+  duration, the test's remark (see below), and the assertion error for
+  any failure. Overwritten each run.
+- e2e/selenium/logs/history.log — the same detail, appended across
+  every run/browser, so nothing is lost when "latest" gets overwritten.
+- e2e/selenium/logs/last-combined-summary.log — written by
+  `test:e2e:all`, a one-line-per-browser pass/fail summary.
+- Every test in the suite calls `t.diagnostic('Remark: ...')` as its
+  first line — a plain-English note on what that test is actually
+  verifying and why. These remarks are captured in the log next to
+  that test's result.

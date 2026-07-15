@@ -43,6 +43,9 @@
   page's hero/tech-stack/team sections.
 - `e2e/selenium/run-all-browsers.js` — runs all eight spec files once per
   browser and prints a combined pass/fail summary.
+- `e2e/selenium/reporters/file-logger.reporter.js` — a custom
+  `node:test` reporter that writes a plain-text log of every test's
+  status and result, plus a short remark, to `e2e/selenium/logs/`.
 
 Between them, the suite now touches every route in `App.jsx` (`/login`,
 `/register`, `/dashboard`, `/business`, `/menu`, `/sales`, `/analytics`,
@@ -92,3 +95,57 @@ falls back to fixed local defaults when that call fails. The suite doesn't
 require the FastAPI backend to be running — assertions are written against
 the fallback behavior so they pass either way — but if you do run the
 backend alongside `npm run dev`, the same tests still hold.
+
+## Logging
+
+Every run — whether via `npm run test:e2e:chrome`/`:firefox`/`:edge` or
+`npm run test:e2e:all` — now also writes a plain-text log through
+`e2e/selenium/reporters/file-logger.reporter.js`, in addition to the
+normal console output. Nothing about running the tests changes; the log
+is just written alongside it.
+
+- **`e2e/selenium/logs/latest-<browser>.log`** — the full detail of the
+  most recent run for that browser: a timestamp, `PASS`/`FAIL`/`SKIP`
+  and duration for every test, that test's remark (see below), and the
+  assertion error message for any failure. Overwritten on every run.
+- **`e2e/selenium/logs/history.log`** — the same detail, appended
+  across every run and every browser, so older runs aren't lost when
+  "latest" gets overwritten.
+- **`e2e/selenium/logs/last-combined-summary.log`** — written only by
+  `test:e2e:all`: a one-line-per-browser pass/fail summary with a
+  pointer to each browser's detailed log.
+
+A `latest-chrome.log` entry looks like:
+
+```
+[2026-07-15T11:07:50.300Z] [PASS] registers a new account and lands on the business setup page (842ms)
+    Remark: Confirms a brand-new account can complete registration and is redirected straight into the /business setup flow.
+[2026-07-15T11:07:50.301Z] [FAIL] rejects registering an email that is already taken (1.20s)
+    Remark: Confirms the registration form blocks a duplicate email with 'Email already registered.' so accounts stay unique.
+    Error: expected the invalid-credentials error to be visible
+
+------------------------------------------------------------------------------
+Summary — 2026-07-15T11:07:50.319Z — browser: chrome
+Total: 32   Passed: 31   Failed: 1   Skipped: 0
+Duration: 45.30s
+Failures:
+  - rejects registering an email that is already taken — expected the invalid-credentials error to be visible
+------------------------------------------------------------------------------
+```
+
+**Remarks**: every `test(...)` in the suite calls
+`t.diagnostic('Remark: ...')` as its first line — a short, plain-English
+note on what that specific test is actually checking and why it
+matters. The reporter picks these up automatically and prints them
+under the matching test's result. To add a remark to a new test, just
+add the `t` parameter and the diagnostic call:
+
+```js
+test('does the thing', async (t) => {
+  t.diagnostic('Remark: Explain in one sentence what this verifies.')
+  // ...rest of the test
+})
+```
+
+The `e2e/selenium/logs/` folder is created automatically the first time
+any run happens, so no manual setup is needed.

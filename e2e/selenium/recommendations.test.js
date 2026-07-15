@@ -21,7 +21,8 @@ describe(`Recommendations [${browserName}]`, () => {
     await resetApp(driver)
   })
 
-  test('shows an empty state when there are no menu items to predict', async () => {
+  test('shows an empty state when there are no menu items to predict', async (t) => {
+    t.diagnostic("Remark: Confirms Recommendations shows a 'No menu items to predict' empty state when the menu is empty.")
     await registerAndLogin(driver)
     await driver.get(`${BASE_URL}/recommendations`)
 
@@ -32,7 +33,8 @@ describe(`Recommendations [${browserName}]`, () => {
     assert.ok(await empty.isDisplayed())
   })
 
-  test('shows a recommendation card with a baseline estimate per menu item once menu items exist', async () => {
+  test('shows a recommendation card with a baseline estimate per menu item once menu items exist', async (t) => {
+    t.diagnostic('Remark: Confirms each seeded menu item gets its own recommendation card, falling back to a Baseline Estimate badge with no sales history yet.')
     await registerAndLogin(driver)
     await seedAppData(driver, {
       business: sampleBusiness(),
@@ -55,7 +57,8 @@ describe(`Recommendations [${browserName}]`, () => {
     assert.ok(confidence.length > 0, 'expected at least one baseline-confidence badge')
   })
 
-  test('explains the Attention-LSTM + XGBoost prediction engine', async () => {
+  test('explains the Attention-LSTM + XGBoost prediction engine', async (t) => {
+    t.diagnostic("Remark: Confirms the engine name and 'How Recommendations Work' explainer are shown to set user expectations about the prediction model.")
     await registerAndLogin(driver)
     await seedAppData(driver, { business: sampleBusiness(), menuItems: [sampleMenuItem()] })
     await driver.get(`${BASE_URL}/recommendations`)
@@ -70,7 +73,8 @@ describe(`Recommendations [${browserName}]`, () => {
     assert.ok(await explainer.isDisplayed())
   })
 
-  test('lets the weather be manually overridden for the selected day', async () => {
+  test('lets the weather be manually overridden for the selected day', async (t) => {
+    t.diagnostic('Remark: Confirms the weather Override control lets a user pick Rainy and toggle back to Auto.')
     await registerAndLogin(driver)
     await seedAppData(driver, { business: sampleBusiness(), menuItems: [sampleMenuItem()] })
     await driver.get(`${BASE_URL}/recommendations`)

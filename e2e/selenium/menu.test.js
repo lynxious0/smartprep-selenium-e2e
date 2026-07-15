@@ -24,12 +24,14 @@ describe(`Menu management [${browserName}]`, () => {
     await driver.wait(until.elementLocated(By.xpath("//h1[contains(.,'Menu Management')]")), 10000)
   })
 
-  test('shows the empty state before any items exist', async () => {
+  test('shows the empty state before any items exist', async (t) => {
+    t.diagnostic("Remark: Confirms a brand-new menu shows the 'No menu items yet' empty state instead of a blank or broken list.")
     const empty = await driver.findElements(By.xpath("//*[contains(text(),'No menu items yet')]"))
     assert.ok(empty.length > 0)
   })
 
-  test('adds a new menu item through the form and shows it in the list', async () => {
+  test('adds a new menu item through the form and shows it in the list', async (t) => {
+    t.diagnostic("Remark: Confirms the Add Item form saves a real item, shows an 'Item added.' confirmation, and the item appears in the list.")
     await driver.findElement(
       By.xpath("//button[contains(.,'Add First Item') or contains(.,'Add Item')]")
     ).click()
@@ -49,7 +51,8 @@ describe(`Menu management [${browserName}]`, () => {
     assert.ok(await listedItem.isDisplayed())
   })
 
-  test('requires an item name before the form can be submitted', async () => {
+  test('requires an item name before the form can be submitted', async (t) => {
+    t.diagnostic('Remark: Confirms the required-name validation blocks submitting the menu item form with an empty name.')
     await driver.findElement(
       By.xpath("//button[contains(.,'Add First Item') or contains(.,'Add Item')]")
     ).click()
@@ -67,7 +70,8 @@ describe(`Menu management [${browserName}]`, () => {
     assert.equal(await nameInput.getAttribute('value'), '')
   })
 
-  test('deletes a menu item after confirming', async () => {
+  test('deletes a menu item after confirming', async (t) => {
+    t.diagnostic("Remark: Confirms deleting an item requires confirmation ('Delete?' -> 'Yes') and removes it from the list with a 'Deleted.' confirmation.")
     await driver.findElement(
       By.xpath("//button[contains(.,'Add First Item') or contains(.,'Add Item')]")
     ).click()
