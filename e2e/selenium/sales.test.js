@@ -46,7 +46,6 @@ describe(`Sales Recording [${browserName}]`, () => {
       10000
     )
     const qtyInputs = await row.findElements(By.css('input[type="number"]'))
-    // Column order is Prepared, Sold, Unsold.
     await qtyInputs[0].sendKeys('20')
     await qtyInputs[1].sendKeys('18')
 

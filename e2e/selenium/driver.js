@@ -3,20 +3,10 @@ import chrome from 'selenium-webdriver/chrome.js'
 import firefox from 'selenium-webdriver/firefox.js'
 import edge from 'selenium-webdriver/edge.js'
 
-// The app under test — start it with `npm run dev` before running these
-// tests, or point BASE_URL at wherever it's already running/deployed.
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:5173'
 
-// Headless by default so this can run in CI; set HEADLESS=false locally to
-// watch the browser drive itself.
 const HEADLESS = process.env.HEADLESS !== 'false'
 
-/**
- * Builds a WebDriver for the browser named by `name` (or the BROWSER env
- * var, defaulting to chrome). Requires the actual browser to be installed
- * on this machine — selenium-webdriver's bundled Selenium Manager takes
- * care of fetching the matching driver binary automatically.
- */
 export async function buildDriver(name = process.env.BROWSER || 'chrome') {
   const browser = name.toLowerCase()
 

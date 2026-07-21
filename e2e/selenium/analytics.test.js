@@ -60,7 +60,7 @@ describe(`Analytics [${browserName}]`, () => {
     assert.equal(await totalUnsold.getText(), '5')
 
     const wasteRate = await driver.findElement(By.xpath("//p[contains(text(),'Waste Rate')]/following-sibling::p"))
-    assert.equal(await wasteRate.getText(), '25.0%') // 5 / 20 preparedQty, toFixed(1)
+    assert.equal(await wasteRate.getText(), '25.0%')
   })
 
   test("shows Today's Summary when a sales record exists for today's date", async (t) => {

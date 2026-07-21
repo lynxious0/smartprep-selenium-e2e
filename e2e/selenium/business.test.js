@@ -61,8 +61,6 @@ describe(`Business Profile [${browserName}]`, () => {
 
     await driver.findElement(By.xpath("//button[@type='submit' and contains(.,'Save Profile')]")).click()
 
-    // Native HTML5 "required" validation should block the submit — the
-    // create-profile form (and its empty name field) should still be there.
     const nameInput = await driver.findElement(By.css('input[placeholder="e.g. Aling Nena\'s Carinderia"]'))
     assert.equal(await nameInput.getAttribute('value'), '')
     const savedHeading = await driver.findElements(By.xpath("//*[contains(text(),'Business profile saved!')]"))

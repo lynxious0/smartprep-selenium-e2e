@@ -60,11 +60,8 @@ describe(`Menu management [${browserName}]`, () => {
       until.elementLocated(By.css('input[placeholder="e.g. Adobo sa Puti"]')),
       10000
     )
-    // Leave the (required) name field empty and try to submit.
     await driver.findElement(By.css('button[type="submit"]')).click()
 
-    // The browser's native HTML5 validation should block the submit, so the
-    // modal — and the empty required field — should still be present.
     const stillOpen = await driver.findElements(By.css('input[placeholder="e.g. Adobo sa Puti"]'))
     assert.equal(stillOpen.length, 1, 'form should not have submitted with an empty required name')
     assert.equal(await nameInput.getAttribute('value'), '')
@@ -84,7 +81,6 @@ describe(`Menu management [${browserName}]`, () => {
       By.xpath("//p[normalize-space(text())='Lumpia']/ancestor::div[contains(@class,'bg-gray-50')][1]")
     )
     const rowButtons = await row.findElements(By.css('button'))
-    // Edit (pencil) is the first icon button, delete (trash) is the second.
     await rowButtons[1].click()
 
     await driver.wait(until.elementLocated(By.xpath("//span[text()='Delete?']")), 5000)

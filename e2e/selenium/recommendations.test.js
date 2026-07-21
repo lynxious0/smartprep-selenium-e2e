@@ -51,8 +51,6 @@ describe(`Recommendations [${browserName}]`, () => {
     const secondCard = await driver.findElement(By.xpath("//h3[normalize-space(text())='Pancit Canton']"))
     assert.ok(await secondCard.isDisplayed())
 
-    // No sales history has been recorded yet, so the engine should fall
-    // back to a baseline (business-profile-driven) estimate.
     const confidence = await driver.findElements(By.xpath("//*[contains(text(),'Baseline Estimate')]"))
     assert.ok(confidence.length > 0, 'expected at least one baseline-confidence badge')
   })
@@ -91,7 +89,6 @@ describe(`Recommendations [${browserName}]`, () => {
     )
     await rainyOption.click()
 
-    // Toggling back to Auto confirms the override control round-trips.
     const autoButton = await driver.wait(
       until.elementLocated(By.xpath("//button[contains(.,'Auto')]")),
       10000
